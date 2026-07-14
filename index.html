@@ -1,74 +1,62 @@
+<!-- index.html -->
 <!DOCTYPE html>
-<html lang="fr" class="h-full bg-slate-50">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kër Mobilier - Le mobilier sénégalais à portée de clic</title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style type="text/tailwindcss">
-      @theme {
-        --color-clifford: #da373d;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kër Mobilier — Le mobilier sénégalais à portée de clic</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+            serif: ["Fraunces", "ui-serif", "Georgia", "serif"]
+          },
+          colors: {
+            terracotta: {
+              50: "#FDF3ED",
+              500: "#DD6B3B",
+              600: "#C6572A",
+              700: "#A6461F"
+            },
+            forest: {
+              700: "#2F4B36",
+              800: "#243A2A"
+            },
+            cream: "#FAF5EE"
+          },
+          boxShadow: {
+            soft: "0 20px 60px rgba(15, 23, 42, 0.12)"
+          }
+        }
       }
-    </style>
-    <!-- <script>
-        // Configuration optionnelle pour étendre les ombres 
-        tailwind.config = {
-            theme: {
-                extend: {
-                    boxShadow: {
-                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-                    }
-                }
-            }
-        }
-    </script> -->
-
-    <!-- Google Fonts : Police Inter (moderne et ultra-lisible pour le e-commerce) -->
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-
-    <!-- FontAwesome CDN pour toutes les icônes de l'application (chaises, canapés, camions, etc.) -->
-    <link rel="stylesheet" href="https://cloudflare.com">
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
+    };
+  </script>
 </head>
-<body class="h-full text-slate-800 antialiased">
+<body class="min-h-screen bg-cream font-sans text-slate-900">
+  <div id="sidebarRoot"></div>
+  <div id="navbarRoot"></div>
 
-    <!-- ZONE DE NOTIFICATION (TOAST) : Pour afficher les succès/erreurs en haut à droite -->
-    <div id="toast" class="pointer-events-none fixed right-5 top-20 z-50 hidden max-w-sm rounded-2xl px-4 py-3 text-sm font-semibold shadow-2xl transition-all duration-300"></div>
+  <!-- Les classes pt-16 / lg:pl-72 sont ajoutées/retirées dynamiquement par app.js :
+       présentes uniquement pour l'espace connecté (admin/artisan avec sidebar + navbar fixe),
+       absentes pour le site public (boutique) qui gère sa propre navbar en pleine largeur. -->
+  <main id="mainLayout" class="min-h-screen">
+    <div id="app"></div>
+  </main>
 
-    <!-- STRUCTURE PRINCIPALE DE L'APPLICATION (LAYOUT COULISSANT) -->
-    <div class="min-h-full">
-        
-        <!-- Ancrage pour la Sidebar gauche (Menu Admin/Artisan) -->
-        <div id="sidebarRoot"></div>
+  <div id="toast" class="pointer-events-none fixed right-5 top-20 z-50 hidden max-w-sm rounded-2xl px-4 py-3 text-sm font-semibold shadow-2xl"></div>
 
-        <!-- Bloc de contenu décalé sur ordinateur pour laisser la place à la Sidebar (lg:pl-72) -->
-        <div class="flex flex-col lg:pl-72">
-            
-            <!-- Ancrage pour la Navbar supérieure (Barre de recherche, profil avatar) -->
-            <div id="navbarRoot"></div>
+  <div id="modalRoot"></div>
 
-            <!-- ZONE MAÎTRESSE DE L'APPLICATION (LE CŒUR DE LA SPA) -->
-            <!-- C'est dans ce conteneur précis que le JavaScript va injecter vos pages -->
-            <main id="app" class="flex-1 p-4 sm:p-6 lg:p-8 pt-20">
-                <!-- Le contenu de boutiquePage.js ou produitsPage.js se dessinera ici automatiquement -->
-            </main>
-
-        </div>
-    </div>
-
-    <!-- CONTENEUR DES FENÊTRES SURGISSANTES (MODALES) : Pour les formulaires d'ajout -->
-    <div id="modalRoot"></div>
-
-    <!-- POINT D'ENTRÉE JAVASCRIPT : Chargement en mode Module (Crucial pour les 'import/export') -->
-    <script type="module" src="./js/app.js"></script>
-
+  <script type="module" src="./js/app.js"></script>
 </body>
 </html>
