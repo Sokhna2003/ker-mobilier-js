@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kër Mobilier - Le mobilier sénégalais à portée de clic</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @theme {
+        --color-clifford: #da373d;
+      }
+    </style>
+    <!-- <script>
+        // Configuration optionnelle pour étendre les ombres 
+        tailwind.config = {
+            theme: {
+                extend: {
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script> -->
+
+    <!-- Google Fonts : Police Inter (moderne et ultra-lisible pour le e-commerce) -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome CDN pour toutes les icônes de l'application (chaises, canapés, camions, etc.) -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="h-full text-slate-800 antialiased">
+
+    <!-- ZONE DE NOTIFICATION (TOAST) : Pour afficher les succès/erreurs en haut à droite -->
+    <div id="toast" class="pointer-events-none fixed right-5 top-20 z-50 hidden max-w-sm rounded-2xl px-4 py-3 text-sm font-semibold shadow-2xl transition-all duration-300"></div>
+
+    <!-- STRUCTURE PRINCIPALE DE L'APPLICATION (LAYOUT COULISSANT) -->
+    <div class="min-h-full">
+        
+        <!-- Ancrage pour la Sidebar gauche (Menu Admin/Artisan) -->
+        <div id="sidebarRoot"></div>
+
+        <!-- Bloc de contenu décalé sur ordinateur pour laisser la place à la Sidebar (lg:pl-72) -->
+        <div class="flex flex-col lg:pl-72">
+            
+            <!-- Ancrage pour la Navbar supérieure (Barre de recherche, profil avatar) -->
+            <div id="navbarRoot"></div>
+
+            <!-- ZONE MAÎTRESSE DE L'APPLICATION (LE CŒUR DE LA SPA) -->
+            <!-- C'est dans ce conteneur précis que le JavaScript va injecter vos pages -->
+            <main id="app" class="flex-1 p-4 sm:p-6 lg:p-8 pt-20">
+                <!-- Le contenu de boutiquePage.js ou produitsPage.js se dessinera ici automatiquement -->
+            </main>
+
+        </div>
+    </div>
+
+    <!-- CONTENEUR DES FENÊTRES SURGISSANTES (MODALES) : Pour les formulaires d'ajout -->
+    <div id="modalRoot"></div>
+
+    <!-- POINT D'ENTRÉE JAVASCRIPT : Chargement en mode Module (Crucial pour les 'import/export') -->
+    <script type="module" src="./js/app.js"></script>
+
+</body>
+</html>
