@@ -1,37 +1,82 @@
-import { getSession } from "./utils/session.js";
-import { renderBoutiquePage } from "./pages/accueil/boutiquePage.js";
+// app.js
+import { getSession, clearSession } from "./utils/session.js";
 import { renderSidebar } from "./components/sidebar.js";
-import { renderNavbar } from "./components/navbar.js";
+import { renderNavbar, renderPublicNavbar } from "./components/navbar.js";
+import { renderFooter } from "./components/footer.js";
 import { navigate } from "./router.js";
 
+const ROLES_BACK_OFFICE = ["admin", "artisan"];
+
 function mountLayout() {
-  // On laisse la navbar et la sidebar visibles si l'étudiant veut se connecter plus tard
-  document.getElementById("sidebarRoot").innerHTML = renderSidebar();
-  document.getElementById("navbarRoot").innerHTML = renderNavbar();
+  const user = getSession();
+  const mainLayout = document.getElementById("mainLayout");
+  const appEl = document.getElementById("app");
+  const sidebarEl = document.getElementById("sidebarRoot");
+  const navbarEl = document.getElementById("navbarRoot");
+  const footerRoot = document.getElementById("footerRoot");
+
+  const estBackOffice = user && ROLES_BACK_OFFICE.includes(user.role);
+
+  if (estBackOffice) {
+    // Espace connecté : sidebar + navbar fixes, contenu centré et paddé
+    if (sidebarEl) {
+      sidebarEl.innerHTML = renderSidebar();
+      sidebarEl.classList.remove("hidden");
+    }
+    if (navbarEl) navbarEl.innerHTML = renderNavbar();
+
+    mainLayout.classList.add("pt-16", "lg:pl-72");
+    appEl.className = "mx-auto max-w-7xl p-4 sm:p-6 lg:p-8";
+    footerRoot?.remove();
+  } else {
+    // Site public (boutique) : navbar pleine largeur, pas de sidebar, pas de padding forcé
+    sidebarEl?.classList.add("hidden");
+    if (navbarEl) navbarEl.innerHTML = renderPublicNavbar();
+
+    mainLayout.classList.remove("pt-16", "lg:pl-72");
+    appEl.className = "";
+
+    if (!document.getElementById("footerRoot")) {
+      const footer = document.createElement("div");
+      footer.id = "footerRoot";
+      footer.innerHTML = renderFooter();
+      mainLayout.appendChild(footer);
+    }
+  }
 }
 
 function startApp() {
   const user = getSession();
 
-  // CORRECTION : Si aucun utilisateur n'est connecté, on affiche la boutique de la maquette !
+  mountLayout();
+
   if (!user) {
-    // Montage partiel (juste la navbar pour le bouton de connexion si vous en avez un)
-    document.getElementById("sidebarRoot").classList.add("hidden"); // Cache la sidebar admin/artisan
-    renderBoutiquePage(); // Affiche la maquette
+    navigate("accueil/boutique");
     return;
   }
 
-  // Si connecté, comportement normal selon le rôle
-  mountLayout();
-  document.getElementById("sidebarRoot").classList.remove("hidden");
-  
   if (user.role === "artisan") {
     navigate("artisan/produits");
   } else if (user.role === "admin") {
     navigate("admin/dashboard");
   } else {
-    renderBoutiquePage(); // Client connecté
+    navigate("accueil/boutique");
   }
 }
 
+// Délégation d'événements globale pour la navigation via data-page (liens navbar publique, sidebar, etc.)
+document.addEventListener("click", (e) => {
+  const lien = e.target.closest("[data-page]");
+  if (lien) {
+    e.preventDefault();
+    navigate(lien.dataset.page);
+  }
+
+  if (e.target.closest("#logoutBtn")) {
+    clearSession();
+    window.location.reload();
+  }
+});
+
+// Lancement de la SPA
 startApp();

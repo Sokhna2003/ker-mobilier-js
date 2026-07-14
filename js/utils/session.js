@@ -1,3 +1,4 @@
+// session.js
 // Ce fichier stocke l'utilisateur connecté dans la mémoire du navigateur (localStorage) pour 
 // savoir qui navigue sur l'application.
 

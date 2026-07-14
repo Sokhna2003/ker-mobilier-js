@@ -1,35 +1,59 @@
+// components/sidebar.js
 import { getSession, clearSession } from "../utils/session.js";
+import { escapeHtml } from "../utils/html.js";
 
+/**
+ * Génère le menu latéral pour les rôles admin / artisan.
+ * (Caché automatiquement par app.js pour les clients non connectés.)
+ */
 export function renderSidebar() {
   const user = getSession();
-  let links = [];
+  const role = user?.role;
 
-  if (user?.role === "artisan") {
-    links = [
-      { page: "artisan/produits", label: "Mon Atelier", icon: "fa-couch" },
-      { page: "artisan/sur-mesure", label: "Demandes Sur-Mesure", icon: "fa-compass-drafting" }
-    ];
-  } else if (user?.role === "admin") {
-    links = [
-      { page: "admin/dashboard", label: "Tableau de bord", icon: "fa-chart-pie" },
-      { page: "admin/validation", label: "Validation Meubles", icon: "fa-clipboard-check" }
-    ];
-  }
+  const linksParRole = {
+    admin: [
+      { label: "Tableau de bord", icon: "fa-gauge", page: "admin/dashboard" },
+      { label: "Produits à valider", icon: "fa-clipboard-check", page: "admin/produits" },
+      { label: "Artisans", icon: "fa-user-gear", page: "admin/artisans" },
+      { label: "Commandes", icon: "fa-box", page: "admin/commandes" },
+      { label: "Livreurs", icon: "fa-truck", page: "admin/livreurs" }
+    ],
+    artisan: [
+      { label: "Mes produits", icon: "fa-chair", page: "artisan/produits" },
+      { label: "Mes commandes", icon: "fa-box", page: "artisan/commandes" },
+      { label: "Demandes sur mesure", icon: "fa-ruler-combined", page: "artisan/demandes" }
+    ]
+  };
 
-  const items = links.map(l => `
-    <button class="nav-link flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950" data-page="${l.page}">
-      <i class="fa-solid ${l.icon} w-5 text-center"></i>
-      <span>${l.label}</span>
-    </button>
+  const liens = linksParRole[role] || [];
+
+  const liensHtml = liens.map(l => `
+    <a href="#" data-page="${l.page}" class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold text-slate-300 transition hover:bg-white/5 hover:text-white">
+      <i class="fa-solid ${l.icon} w-4 text-center"></i>
+      <span>${escapeHtml(l.label)}</span>
+    </a>
   `).join("");
 
   return `
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-72 -translate-x-full border-r border-slate-200 bg-white transition-transform lg:translate-x-0">
-      <div class="px-5 py-5 border-b border-slate-100">
-        <h1 class="text-xl font-black text-slate-950">Kër Mobilier</h1>
-        <p class="text-xs font-bold text-amber-700 uppercase tracking-wider mt-0.5">${user?.atelier || "Espace Admin"}</p>
+    <aside class="fixed inset-y-0 left-0 z-30 hidden w-72 flex-col bg-slate-950 p-5 lg:flex">
+      <div class="mb-8 flex items-center gap-2 px-2">
+        <span class="text-lg font-black text-white">Kër Mobilier</span>
       </div>
-      <nav class="grid gap-2 px-4 py-4">${items}</nav>
+      <nav class="flex flex-1 flex-col gap-1">
+        ${liensHtml}
+      </nav>
+      <button id="sidebarLogoutBtn" class="mt-auto flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold text-slate-400 transition hover:bg-white/5 hover:text-rose-400">
+        <i class="fa-solid fa-power-off w-4 text-center"></i>
+        <span>Déconnexion</span>
+      </button>
     </aside>
   `;
 }
+
+// Délégation d'événement globale pour la déconnexion depuis la sidebar
+document.addEventListener("click", (e) => {
+  if (e.target.closest("#sidebarLogoutBtn")) {
+    clearSession();
+    window.location.reload();
+  }
+});
