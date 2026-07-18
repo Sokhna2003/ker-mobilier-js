@@ -1,5 +1,3 @@
-
-// navbar.js
 import { getSession } from "../utils/session.js";
 import { escapeHtml } from "../utils/html.js";
 
@@ -28,7 +26,7 @@ export function renderNavbar() {
     `;
   } else {
     userZoneHtml = `
-      <button class="inline-flex items-center gap-2 rounded-xl bg-amber-700 px-4 py-2 text-xs font-black text-white shadow-md transition hover:bg-amber-800">
+      <button id="openLoginModalBtn" class="inline-flex items-center gap-2 rounded-xl bg-amber-700 px-4 py-2 text-xs font-black text-white shadow-md transition hover:bg-amber-800">
         <i class="fa-solid fa-user-lock"></i>
         <span>Connexion</span>
       </button>
@@ -97,7 +95,9 @@ export function renderPublicNavbar() {
           <button class="hidden h-9 w-9 items-center justify-center rounded-full text-slate-600 transition hover:bg-black/5 sm:flex" title="Panier">
             <i class="fa-solid fa-bag-shopping"></i>
           </button>
-          <button class="rounded-full bg-terracotta-500 px-5 py-2 text-xs font-black uppercase tracking-wide text-white shadow-sm transition hover:bg-terracotta-600">
+          
+          <!-- CORRECTION : Ajout de l'ID pour déclencher la modale et harmonisation bg -->
+          <button id="openLoginModalBtn" class="rounded-full bg-amber-700 px-5 py-2 text-xs font-black uppercase tracking-wide text-white shadow-sm transition hover:bg-emerald-700">
             Connexion
           </button>
         </div>
