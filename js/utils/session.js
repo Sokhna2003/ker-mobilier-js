@@ -1,8 +1,7 @@
-// session.js
 // Ce fichier stocke l'utilisateur connecté dans la mémoire du navigateur (localStorage) pour 
 // savoir qui navigue sur l'application.
 
-// Stocke l'utilisateur en cours dans le navigateur
+// Sauvegarde l'utilisateur connecté dans le localStorage
 export function setSession(user) {
   localStorage.setItem("ker_user", JSON.stringify(user));
 }
@@ -13,11 +12,12 @@ export function getSession() {
   return user ? JSON.parse(user) : null;
 }
 
+// Supprime l'utilisateur (Déconnexion)
 export function clearSession() {
   localStorage.removeItem("ker_user");
 }
 
-// Vérifie le role de  l'utilisateur connecté
+//  Récupère l'identifiant du rôle (ex: "admin", "artisan")
 export function getRole() {
   return getSession()?.role || null;
 }

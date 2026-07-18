@@ -1,41 +1,39 @@
-// router.js
 import { renderBoutiquePage } from "./pages/accueil/boutiquePage.js";
-// import { renderArtisanProduitsPage } from "./pages/artisan/produitsPage.js";
+import { renderLoginPage } from "./pages/accueil/loginPage.js";
+import { renderAdminDashboard } from "./pages/admin/dashboardPage.js";
+import { renderArtisanDashboard } from "./pages/artisan/dashboardPage.js";
+import { renderClientDashboard } from "./pages/client/dashboardPage.js";
+import { renderLivreurDashboard } from "./pages/livreur/dashboardPage.js";
 
+
+
+// Table de correspondance des routes
 const routes = {
   "accueil/boutique": renderBoutiquePage,
-//   "artisan/produits": renderArtisanProduitsPage
+  "login": renderLoginPage,
+  "admin/dashboard": renderAdminDashboard,
+  "artisan/dashboard": renderArtisanDashboard,
+  "client/dashboard": renderClientDashboard,
+  "livreur/dashboard": renderLivreurDashboard
 };
 
 export async function navigate(page) {
   const app = document.getElementById("app");
   
-  // Sécurité de routage (Fallback vers la boutique par défaut)
+  // Si la route demandée n'existe pas, retour à la boutique
   const routeFunction = routes[page] || routes["accueil/boutique"];
-
-  // Changement dynamique du titre dans la navbar
-  const navbarTitle = document.getElementById("navbarTitle");
-  if (navbarTitle) {
-    navbarTitle.textContent = page === "artisan/produits" ? "Espace Artisan" : "Boutique Kër Mobilier";
-  }
 
   // Écran de chargement temporaire
   app.innerHTML = `
     <div class="grid min-h-[30vh] place-items-center">
-      <p class="text-xs font-bold text-slate-400 uppercase tracking-widest animate-pulse">Chargement des meubles...</p>
+      <p class="text-xs font-bold text-slate-400 uppercase tracking-widest animate-pulse">Chargement...</p>
     </div>
   `;
 
   try {
-    // Appel de la fonction d'affichage de la page ciblée
     await routeFunction();
   } catch (error) {
     console.error("Erreur de routage :", error);
-    app.innerHTML = `
-      <div class="p-6 bg-white rounded-3xl border border-rose-100 text-center">
-        <p class="text-sm font-bold text-rose-600">Erreur lors de l'affichage de la page.</p>
-        <p class="text-xs text-slate-400 mt-1">${error.message}</p>
-      </div>
-    `;
+    app.innerHTML = `<p class="text-rose-600 font-bold p-4">Erreur : ${error.message}</p>`;
   }
 }

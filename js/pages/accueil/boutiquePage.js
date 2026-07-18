@@ -1,4 +1,3 @@
-// accueil/boutiquePage.js
 import { API_BASE_URL } from "../../config/api.js";
 import { apiRequest } from "../../services/apiClient.js";
 import { escapeHtml } from "../../utils/html.js";
@@ -7,7 +6,6 @@ function placeholderUrl(label, w = 600, h = 450) {
   return `https://placehold.co/${w}x${h}/EDE1D3/2F4B36?text=${encodeURIComponent(label)}&font=raleway`;
 }
 
-// Dernier segment d'une adresse "Médina, Rue 22, Dakar" -> "Dakar"
 function extraireVille(adresse) {
   if (!adresse) return "Sénégal";
   const parts = adresse.split(",").map(p => p.trim());

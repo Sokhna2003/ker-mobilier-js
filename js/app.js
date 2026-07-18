@@ -1,70 +1,57 @@
-// app.js
-import { getSession, clearSession } from "./utils/session.js";
+import { getSession, clearSession, getRole } from "./utils/session.js";
 import { renderSidebar } from "./components/sidebar.js";
 import { renderNavbar, renderPublicNavbar } from "./components/navbar.js";
-import { renderFooter } from "./components/footer.js";
 import { navigate } from "./router.js";
+import { openRoleSelectionModal } from "./components/modalSelectionRole.js";
 
 const ROLES_BACK_OFFICE = ["admin", "artisan"];
 
 function mountLayout() {
   const user = getSession();
-  const mainLayout = document.getElementById("mainLayout");
-  const appEl = document.getElementById("app");
   const sidebarEl = document.getElementById("sidebarRoot");
   const navbarEl = document.getElementById("navbarRoot");
-  const footerRoot = document.getElementById("footerRoot");
 
+  // On vérifie si l'acteur fait partie du Back-Office (Admin ou Artisan)
   const estBackOffice = user && ROLES_BACK_OFFICE.includes(user.role);
 
   if (estBackOffice) {
-    // Espace connecté : sidebar + navbar fixes, contenu centré et paddé
     if (sidebarEl) {
       sidebarEl.innerHTML = renderSidebar();
       sidebarEl.classList.remove("hidden");
     }
     if (navbarEl) navbarEl.innerHTML = renderNavbar();
-
-    mainLayout.classList.add("pt-16", "lg:pl-72");
-    appEl.className = "mx-auto max-w-7xl p-4 sm:p-6 lg:p-8";
-    footerRoot?.remove();
   } else {
-    // Site public (boutique) : navbar pleine largeur, pas de sidebar, pas de padding forcé
+    // Client ou Visiteur anonyme -> Pas de sidebar, navbar publique
     sidebarEl?.classList.add("hidden");
     if (navbarEl) navbarEl.innerHTML = renderPublicNavbar();
-
-    mainLayout.classList.remove("pt-16", "lg:pl-72");
-    appEl.className = "";
-
-    if (!document.getElementById("footerRoot")) {
-      const footer = document.createElement("div");
-      footer.id = "footerRoot";
-      footer.innerHTML = renderFooter();
-      mainLayout.appendChild(footer);
-    }
   }
 }
 
 function startApp() {
   const user = getSession();
+  const roleId = getRole();
 
-  mountLayout();
-
-  if (!user) {
-    navigate("accueil/boutique");
+  // 1. CAS CONECTÉ : On redirige directement vers le bon H1 de test
+  if (user) {
+    mountLayout();
+    if (roleId === "admin") navigate("admin/dashboard");
+    else if (roleId === "artisan") navigate("artisan/dashboard");
+    else if (roleId === "client") navigate("client/dashboard");
+    else if (roleId === "livreur") navigate("livreur/dashboard");
     return;
   }
 
-  if (user.role === "artisan") {
-    navigate("artisan/produits");
-  } else if (user.role === "admin") {
-    navigate("admin/dashboard");
+  // 2. CAS NON-CONNECTÉ : Gestion de la page demandée
+  // Permet d'intercepter la demande de connexion de la modale
+  if (window.location.hash.startsWith("#login")) {
+    navigate("login");
   } else {
+    mountLayout();
     navigate("accueil/boutique");
   }
 }
 
-// Délégation d'événements globale pour la navigation via data-page (liens navbar publique, sidebar, etc.)
+// Détection des clics globaux
 document.addEventListener("click", (e) => {
   const lien = e.target.closest("[data-page]");
   if (lien) {
@@ -72,11 +59,21 @@ document.addEventListener("click", (e) => {
     navigate(lien.dataset.page);
   }
 
+  // Ouvre la modale au clic sur le bouton connexion
+  if (e.target.closest("#openLoginModalBtn") || e.target.closest("#navLoginBtn") || e.target.closest("#loginBtn")) {
+    e.preventDefault();
+    openRoleSelectionModal();
+  }
+
+  // Gestion de la déconnexion
   if (e.target.closest("#logoutBtn")) {
     clearSession();
     window.location.reload();
   }
 });
 
-// Lancement de la SPA
+// Écoute les changements d'URL du navigateur pour la modale
+window.addEventListener("hashchange", startApp);
+
+// Lancement initial
 startApp();

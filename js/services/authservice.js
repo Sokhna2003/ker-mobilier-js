@@ -7,10 +7,10 @@ export async function loginUser(email, password) {
   const result = await apiRequest(url, {}, "Erreur de connexion.");
 
   if (!result || result.length === 0) {
-    throw new Error("Identifiants incorrects. Veuillez réessayer.");
+    throw new Error("Adresse e-mail ou mot de passe incorrect");
   }
 
-  const user = result[0];
-  setSession(user);
+  const user = result[0];  // Extraction de l'utilisateur unique de la liste
+  setSession(user);  // Activation de sa session
   return user;
 }
