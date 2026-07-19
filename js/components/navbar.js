@@ -1,63 +1,77 @@
 import { getSession } from "../utils/session.js";
 import { escapeHtml } from "../utils/html.js";
 
+
 /**
- * Navbar de l'espace connecté (admin / artisan) : fixe, avec sidebar à gauche,
- * recherche et profil. Utilisée uniquement quand un utilisateur avec rôle
- * back-office est connecté.
+ * Génère la barre de navigation supérieure sombre pour tous les acteurs connectés.
+ * S'adapte dynamiquement selon que l'utilisateur est admin, artisan, livreur ou client.
  */
 export function renderNavbar() {
   const user = getSession();
 
-  let userZoneHtml = "";
+  //  Récupération dynamique du prénom (ou du nom de l'atelier pour un artisan)
+  const prenomAafficher = user?.prenom || user?.atelier || "Utilisateur";
 
-  if (user) {
-    const displayName = user.prenom ? `${user.prenom} ${user.nom}` : user.atelier;
-    userZoneHtml = `
-      <div class="flex items-center gap-3">
-        <div class="hidden sm:block text-right">
-          <p class="text-xs font-black text-slate-950">${escapeHtml(displayName)}</p>
-          <p class="text-[10px] font-bold text-amber-700 uppercase tracking-tight">${escapeHtml(user.role)}</p>
-        </div>
-        <button id="logoutBtn" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-500 border border-slate-200 transition hover:bg-rose-50 hover:text-rose-600" title="Se déconnecter">
-          <i class="fa-solid fa-power-off text-sm"></i>
-        </button>
-      </div>
-    `;
-  } else {
-    userZoneHtml = `
-      <button id="openLoginModalBtn" class="inline-flex items-center gap-2 rounded-xl bg-amber-700 px-4 py-2 text-xs font-black text-white shadow-md transition hover:bg-amber-800">
-        <i class="fa-solid fa-user-lock"></i>
-        <span>Connexion</span>
-      </button>
-    `;
-  }
+  //  Traduction ou formatage propre du rôle pour l'affichage visuel à l'écran
+  let roleLibelle = "Client";
+  if (user?.role === "admin") roleLibelle = "Admin";
+  if (user?.role === "artisan") roleLibelle = "Artisan";
+  if (user?.role === "livreur") roleLibelle = "Livreur";
 
   return `
-    <header class="fixed inset-x-0 top-0 z-20 flex h-16 items-center justify-between border-b border-slate-200 bg-white/90 px-4 backdrop-blur lg:left-72">
-      <div class="flex items-center gap-3">
-        <button id="sidebarToggle" class="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 lg:hidden" aria-label="Ouvrir le menu">
-          <i class="fa-solid fa-bars"></i>
-        </button>
-        <div class="flex items-center gap-2 text-sm font-bold text-slate-500">
-          <i class="fa-solid fa-house text-slate-400"></i>
-          <span id="navbarTitle">Boutique</span>
-        </div>
+    <header class="fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between bg-slate-950 px-6 text-white shadow-md">
+      
+      <!-- ZONE GAUCHE : Logo Kër Mobilier conforme à la maquette -->
+      <div class="flex items-center gap-3 cursor-pointer" data-page="accueil/boutique">
+        <span class="font-serif text-lg font-extrabold tracking-tight text-white hover:text-amber-500 transition">
+          Kër Mobilier
+        </span>
       </div>
 
-      <div class="hidden md:block w-72 relative">
+      <!-- ZONE CENTRALE : Barre de recherche épurée -->
+      <div class="relative w-full max-w-md hidden md:block">
         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
           <i class="fa-solid fa-magnifying-glass text-xs"></i>
         </div>
-        <input type="text" class="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-medium text-slate-800 outline-none transition focus:border-amber-600 focus:bg-white focus:ring-4 focus:ring-amber-50" placeholder="Rechercher un salon, une armoire..." />
+        <input type="text" class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-medium text-slate-200 outline-none transition focus:border-amber-700" placeholder="Search..." />
       </div>
 
-      <div class="flex items-center gap-3">
-        ${userZoneHtml}
+      <!-- ZONE DROITE : Actions et Profil de l'utilisateur connecté -->
+      <div class="flex items-center gap-6">
+        
+        <!-- Bouton de retour vers la vitrine publique -->
+        <button data-page="accueil/boutique" class="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900 px-3 py-1.5 text-xs font-bold text-slate-300 transition hover:bg-slate-800 hover:text-white">
+          <i class="fa-solid fa-eye text-[11px]"></i>
+          <span>Voir le site public</span>
+        </button>
+
+        <!-- Icônes utilitaires (Luminosité, Thème, Cloche) -->
+        <div class="flex items-center gap-3 text-slate-400 text-xs">
+          <button class="hover:text-white transition"><i class="fa-solid fa-sun"></i></button>
+          <button class="hover:text-white transition"><i class="fa-solid fa-moon"></i></button>
+          <button class="hover:text-white transition relative">
+            <i class="fa-solid fa-bell"></i>
+            <span class="absolute -top-1 -right-1 h-1.5 w-1.5 rounded-full bg-amber-600"></span>
+          </button>
+        </div>
+
+        <!-- Bloc Profil de l'acteur (Avatar + Prénom + Rôle) -->
+        <div class="flex items-center gap-3 border-l border-slate-800 pl-4">
+          <div class="h-8 w-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 font-bold overflow-hidden shadow-inner">
+            <i class="fa-solid fa-user text-xs"></i>
+          </div>
+          <div class="text-left leading-none">
+            <p class="text-xs font-black text-white">${escapeHtml(prenomAafficher)}</p>
+            <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">${escapeHtml(roleLibelle)}</p>
+          </div>
+        </div>
+
       </div>
+
     </header>
   `;
 }
+
 
 /**
  * Navbar du site public (vitrine / boutique) : logo, menu centré,
