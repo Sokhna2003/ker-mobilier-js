@@ -1,15 +1,15 @@
 import { getSession } from "../utils/session.js";
+import { escapeHtml } from "../utils/html.js";
 
 /**
- * Génère le menu latéral gauche (Sidebar) de manière dynamique.
- * Injecte les onglets spécifiques requis pour l'Admin, l'Artisan, le Client et le Livreur.
+ * Génère le menu latéral gauche (Sidebar) dynamique.
+ * Intègre le bloc Profil utilisateur tout en haut sur Mobile uniquement.
  */
-
 export function renderSidebar() {
   const user = getSession();
   const role = user?.role || "";
 
-  // 1. Définition des onglets par acteur selon votre db.json épuré
+  // 1. Définition des listes d'onglets métiers
   let onglets = [];
 
   if (role === "admin") {
@@ -22,7 +22,8 @@ export function renderSidebar() {
       { page: "admin/commandes", label: "Commandes", icon: "fa-boxes-packing" },
       { page: "admin/livraison", label: "Livraison", icon: "fa-user-truck" },
       { page: "admin/sur-mesure", label: "Fabrication sur mesure", icon: "fa-compass-drafting" },
-      { page: "admin/avis", label: "Avis", icon: "fa-star" }
+      { page: "admin/avis", label: "Avis", icon: "fa-star" },
+      { page: "admin/corbeille", label: "Corbeille", icon: "fa-trash-can" }
     ];
   } else if (role === "artisan") {
     onglets = [
@@ -51,17 +52,15 @@ export function renderSidebar() {
     ];
   }
 
-  // Détection de la page SPA active pour la mise en surbrillance
   const pageActuelle = window.location.hash.replace("#", "") || `${role}/dashboard`;
 
-  // 2. Génération du HTML des boutons (Recentrés avec mx-auto pour des marges Gauche/Droite égales)
+  // 2. Rendu des boutons de navigation (Parfaitement centrés avec mx-auto)
   const itemsHtml = onglets.map(o => {
     const estActif = pageActuelle === o.page || (pageActuelle === "login" && o.page.includes("dashboard"));
-    
-    // w-[88%] mx-auto permet de centrer parfaitement l'onglet dans la sidebar blanche
-    const classeBouton = estActif 
-      ? "flex items-center gap-3 w-[88%] mx-auto rounded-2xl px-4 py-3 text-left text-xs font-black bg-[#0B132B] text-white shadow-md animate-in fade-in duration-200"
-      : "flex items-center gap-3 w-[88%] mx-auto rounded-2xl px-4 py-3 text-left text-xs font-extrabold text-slate-950 transition duration-150 hover:bg-slate-50 hover:text-slate-950";
+
+    const classeBouton = estActif
+      ? "flex items-center gap-3 w-[88%] mx-auto rounded-2xl px-4 py-3 text-left text-xs font-black bg-[#0B132B] text-white shadow-md"
+      : "flex items-center gap-3 w-[88%] mx-auto rounded-2xl px-4 py-3 text-left text-xs font-black text-slate-950 transition duration-150 hover:bg-slate-50";
 
     const classeIcone = estActif ? "text-white" : "text-slate-950";
 
@@ -73,21 +72,41 @@ export function renderSidebar() {
     `;
   }).join("");
 
-  // 3. Structure globale : top-16 abaisse la barre sous le nav, rounded-tr-[2.5rem] dessine l'arrondi visible
+  // Bloc Profil Mobile haut de Sidebar
+  const prenomAafficher = user?.prenom || user?.atelier || "Utilisateur";
+  let roleLibelle = "Client";
+  if (role === "admin") roleLibelle = "Admin";
+  if (role === "artisan") roleLibelle = "Artisan";
+  if (role === "livreur") roleLibelle = "Livreur";
+
+  const profilMobileHtml = `
+    <div class="flex items-center gap-3 bg-slate-50 p-3 mx-4 mb-4 rounded-2xl border border-slate-100 lg:hidden">
+      <div class="h-9 w-9 rounded-full bg-[#0B132B] text-white flex items-center justify-center font-bold shadow-inner">
+        <i class="fa-solid fa-user text-xs"></i>
+      </div>
+      <div class="text-left leading-none">
+        <p class="text-xs font-black text-slate-950">${escapeHtml(prenomAafficher)}</p>
+        <p class="text-[10px] font-black text-amber-700 mt-1 uppercase tracking-wider">${escapeHtml(roleLibelle)}</p>
+      </div>
+    </div>
+  `;
+
+  // 3. RETOUR STRUCTUREL RESPONSIVE (Abaissement top-16, caché à gauche sur mobile -translate-x-full)
   return `
-    <aside id="sidebar" class="fixed top-16 bottom-0 left-0 z-40 w-72 bg-white pt-6 border-r border-[#0B132B] flex flex-col justify-between shadow-sm rounded-tr-[2rem]">
-      
-      <!-- Liste des onglets centrés en haut -->
+    <aside id="sidebar" class="fixed top-16 bottom-0 left-0 z-40 w-72 bg-white pt-5 border-r border-[#0B132B] flex flex-col justify-between shadow-xl rounded-tr-[2rem] transform -translate-x-full transition-transform duration-200 lg:translate-x-0">
+
+      <!-- Partie haute : Profil mobile + Liste des menus -->
       <div class="overflow-y-auto pr-0 flex-1">
+        ${profilMobileHtml}
         <nav class="grid gap-1">
           ${itemsHtml}
         </nav>
       </div>
 
-      <!-- Bouton Déconnexion centré tout en bas -->
+      <!-- Partie basse : Déconnexion -->
       <div class="p-4 border-t border-slate-50 flex justify-center">
-        <button id="logoutBtn" class="flex items-center gap-3 w-[88%] mx-auto rounded-2xl px-4 py-3 text-left text-xs font-extrabold transition duration-150 hover:bg-rose-50 hover:text-rose-600">
-          <i class="fa-solid fa-arrow-right-from-bracket w-5 text-center text-sm"></i>
+        <button id="logoutBtn" class="flex items-center gap-3 w-[88%] mx-auto rounded-2xl px-4 py-3 text-left text-xs font-black text-slate-950 transition duration-150 hover:bg-rose-50 hover:text-rose-600">
+          <i class="fa-solid fa-arrow-right-from-bracket w-5 text-center text-sm text-slate-950"></i>
           <span>Déconnexion</span>
         </button>
       </div>
@@ -95,6 +114,3 @@ export function renderSidebar() {
     </aside>
   `;
 }
-
-
-
