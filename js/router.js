@@ -7,6 +7,7 @@ import { renderLivreurDashboard } from "./pages/livreur/dashboardPage.js";
 import { renderUtilisateursPage } from "./pages/admin/utilisateursPage.js";
 import { renderUtilisateurDetailPage } from "./pages/admin/utilisateursDetailPage.js";
 import { renderCorbeillePage } from "./pages/admin/corbeillePage.js";
+import { renderCategoriesPage } from "./pages/admin/categoriesPage.js";
 
 // Table de correspondance des routes (sans les paramètres ?...)
 const routes = {
@@ -18,13 +19,15 @@ const routes = {
   "livreur/dashboard": renderLivreurDashboard,
   "admin/utilisateurs": renderUtilisateursPage,
   "admin/utilisateur-detail": renderUtilisateurDetailPage,
-  "admin/corbeille": renderCorbeillePage
+  "admin/corbeille": renderCorbeillePage,
+  "admin/categories": renderCategoriesPage
 };
 
 const TITRES = {
   "admin/utilisateurs": "Gestion des Utilisateurs",
   "admin/utilisateur-detail": "Détail de l'utilisateur",
   "admin/corbeille": "Corbeille",
+  "admin/categories": "Catégories",
   "admin/dashboard": "Espace Direction"
 };
 
