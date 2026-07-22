@@ -1,11 +1,14 @@
+// accueil/boutiquePage.js
 import { API_BASE_URL } from "../../config/api.js";
 import { apiRequest } from "../../services/apiClient.js";
+import { getAllProduits } from "../../services/produitservice.js";
 import { escapeHtml } from "../../utils/html.js";
 
 function placeholderUrl(label, w = 600, h = 450) {
   return `https://placehold.co/${w}x${h}/EDE1D3/2F4B36?text=${encodeURIComponent(label)}&font=raleway`;
 }
 
+// Dernier segment d'une adresse "Médina, Rue 22, Dakar" -> "Dakar"
 function extraireVille(adresse) {
   if (!adresse) return "Sénégal";
   const parts = adresse.split(",").map(p => p.trim());
@@ -25,11 +28,13 @@ export async function renderBoutiquePage() {
   const app = document.getElementById("app");
 
   try {
-    const [produits, categoriesData, utilisateurs] = await Promise.all([
-      apiRequest(`${API_BASE_URL}/produits?statut=VALIDE`, {}, "Erreur produits."),
+    const [tousLesProduits, categoriesData, utilisateurs] = await Promise.all([
+      getAllProduits(), // exclut déjà les produits mis à la corbeille par l'admin
       apiRequest(`${API_BASE_URL}/categories`, {}, "Erreur catégories."),
       apiRequest(`${API_BASE_URL}/utilisateurs`, {}, "Erreur utilisateurs.")
     ]);
+
+    const produits = tousLesProduits.filter(p => p.statut === "VALIDE");
 
     categories = categoriesData;
 

@@ -7,6 +7,13 @@ export async function getAllUtilisateurs() {
   return tous.filter(u => u.supprime !== true);
 }
 
+// Artisans "Agréés" (partenaires premium) : ce sont les seuls pour qui l'admin
+// peut publier un produit directement en leur nom (cf. Fonctionnalité 1).
+export async function getArtisansAgrees() {
+  const tous = await getAllUtilisateurs();
+  return tous.filter(u => u.role === "artisan" && u.isPremium === true);
+}
+
 // Récupère uniquement les comptes mis à la corbeille
 export async function getUtilisateursCorbeille() {
   const tous = await apiRequest(`${API_BASE_URL}/utilisateurs`, {}, "Impossible de charger la corbeille.");

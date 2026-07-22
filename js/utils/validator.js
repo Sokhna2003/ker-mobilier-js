@@ -39,6 +39,13 @@ export function isPositiveNumber(value, message = "Ce champ doit être un nombre
   }
 }
 
+export function isNonNegativeNumber(value, message = "Ce champ doit être un nombre positif ou nul.") {
+  const nombre = Number(value);
+  if (Number.isNaN(nombre) || nombre < 0) {
+    throw new Error(message);
+  }
+}
+
 // ---------- Affichage des erreurs directement sous les champs ----------
 
 /**

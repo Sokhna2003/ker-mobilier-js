@@ -1,23 +1,33 @@
 import { getUtilisateursCorbeille, restaurerUtilisateur, supprimerDefinitivementUtilisateur } from "../../services/utilisateurservice.js";
 import { getCategoriesCorbeille, restaurerCategorie, supprimerDefinitivementCategorie } from "../../services/categorieservice.js";
+import { getProduitsCorbeille, republierProduit, supprimerDefinitivementProduit } from "../../services/produitservice.js";
 import { escapeHtml } from "../../utils/html.js";
 import { showToast } from "../../components/toast.js";
 import { openConfirm } from "../../components/modal.js";
 
-// Pour ajouter un nouveau type d'entité à la corbeille plus tard (produits, etc.),
+// Pour ajouter un nouveau type d'entité à la corbeille plus tard,
 // il suffit d'ajouter une entrée ici avec ses fonctions restaurer/supprimer.
 const TYPES_CORBEILLE = {
   utilisateur: {
     label: "Utilisateur",
     badgeClasse: "bg-purple-50 text-purple-700",
+    restaurerLabel: "Restaurer",
     restaurer: restaurerUtilisateur,
     supprimerDefinitivement: supprimerDefinitivementUtilisateur
   },
   categorie: {
     label: "Catégorie",
     badgeClasse: "bg-amber-50 text-amber-700",
+    restaurerLabel: "Restaurer",
     restaurer: restaurerCategorie,
     supprimerDefinitivement: supprimerDefinitivementCategorie
+  },
+  produit: {
+    label: "Produit",
+    badgeClasse: "bg-emerald-50 text-emerald-700",
+    restaurerLabel: "Republier",
+    restaurer: republierProduit,
+    supprimerDefinitivement: supprimerDefinitivementProduit
   }
 };
 
@@ -28,9 +38,10 @@ export async function renderCorbeillePage() {
   const app = document.getElementById("app");
 
   try {
-    const [utilisateurs, categories] = await Promise.all([
+    const [utilisateurs, categories, produits] = await Promise.all([
       getUtilisateursCorbeille(),
-      getCategoriesCorbeille()
+      getCategoriesCorbeille(),
+      getProduitsCorbeille()
     ]);
 
     elementsCorbeille = [
@@ -47,6 +58,13 @@ export async function renderCorbeillePage() {
         titre: c.libelle,
         sousTitre: "Catégorie",
         dateSuppression: c.dateSuppression
+      })),
+      ...produits.map(p => ({
+        type: "produit",
+        id: p.id,
+        titre: p.nom,
+        sousTitre: `${Number(p.prix).toLocaleString()} FCFA`,
+        dateSuppression: p.dateSuppression
       }))
     ];
 
@@ -65,6 +83,7 @@ export async function renderCorbeillePage() {
             <option value="tout">Tous les éléments</option>
             <option value="utilisateur">Utilisateurs</option>
             <option value="categorie">Catégories</option>
+            <option value="produit">Produits</option>
           </select>
         </div>
 
@@ -136,7 +155,7 @@ function afficherLignes() {
           <div class="flex items-center justify-end gap-2">
             <button class="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-[11px] font-black text-slate-700 transition hover:bg-slate-50" data-restaurer="${escapeHtml(item.id)}" data-type="${item.type}">
               <i class="fa-solid fa-rotate-left"></i>
-              Restaurer
+              ${config.restaurerLabel}
             </button>
             <button class="inline-flex items-center gap-1.5 rounded-xl bg-rose-600 px-3 py-2 text-[11px] font-black text-white transition hover:bg-rose-700" data-supprimer-definitif="${escapeHtml(item.id)}" data-type="${item.type}">
               <i class="fa-solid fa-trash"></i>
@@ -153,8 +172,8 @@ function afficherLignes() {
       const config = TYPES_CORBEILLE[btn.dataset.type];
 
       openConfirm({
-        message: "Restaurer cet élément ? Il redeviendra visible dans sa liste d'origine.",
-        confirmLabel: "Restaurer",
+        message: `${config.restaurerLabel} cet élément ? Il redeviendra visible dans sa liste d'origine.`,
+        confirmLabel: config.restaurerLabel,
         onConfirm: async () => {
           try {
             await config.restaurer(btn.dataset.restaurer);
