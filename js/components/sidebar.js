@@ -16,7 +16,6 @@ export function renderSidebar() {
     onglets = [
       { page: "admin/dashboard", label: "Dashboard", icon: "fa-chart-pie" },
       { page: "admin/utilisateurs", label: "Utilisateurs", icon: "fa-users-gear" },
-      { page: "admin/artisans", label: "Artisans", icon: "fa-id-card-clip" },
       { page: "admin/produits", label: "Produits", icon: "fa-couch" },
       { page: "admin/categories", label: "Catégories", icon: "fa-tags" },
       { page: "admin/commandes", label: "Commandes", icon: "fa-boxes-packing" },
