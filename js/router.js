@@ -2,6 +2,7 @@ import { renderBoutiquePage } from "./pages/accueil/boutiquePage.js";
 import { renderLoginPage } from "./pages/accueil/loginPage.js";
 import { renderAdminDashboard } from "./pages/admin/dashboardPage.js";
 import { renderArtisanDashboard } from "./pages/artisan/dashboardPage.js";
+import { renderArtisanProduitsPage } from "./pages/artisan/produitsPage.js";
 import { renderClientDashboard } from "./pages/client/dashboardPage.js";
 import { renderLivreurDashboard } from "./pages/livreur/dashboardPage.js";
 import { renderUtilisateursPage } from "./pages/admin/utilisateursPage.js";
@@ -17,6 +18,7 @@ const routes = {
   "login": renderLoginPage,
   "admin/dashboard": renderAdminDashboard,
   "artisan/dashboard": renderArtisanDashboard,
+  "artisan/produits": renderArtisanProduitsPage,
   "client/dashboard": renderClientDashboard,
   "livreur/dashboard": renderLivreurDashboard,
   "admin/utilisateurs": renderUtilisateursPage,
@@ -34,7 +36,8 @@ const TITRES = {
   "admin/categories": "Catégories",
   "admin/produits": "Produits",
   "admin/produit-detail": "Détail du produit",
-  "admin/dashboard": "Espace Direction"
+  "admin/dashboard": "Espace Direction",
+  "artisan/produits": "Mes Produits"
 };
 
 export async function navigate(page) {
