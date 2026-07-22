@@ -8,6 +8,8 @@ import { renderUtilisateursPage } from "./pages/admin/utilisateursPage.js";
 import { renderUtilisateurDetailPage } from "./pages/admin/utilisateursDetailPage.js";
 import { renderCorbeillePage } from "./pages/admin/corbeillePage.js";
 import { renderCategoriesPage } from "./pages/admin/categoriesPage.js";
+import { renderProduitsPage } from "./pages/admin/produitsPage.js";
+import { renderProduitDetailPage } from "./pages/admin/produitDetailPage.js";
 
 // Table de correspondance des routes (sans les paramètres ?...)
 const routes = {
@@ -20,7 +22,9 @@ const routes = {
   "admin/utilisateurs": renderUtilisateursPage,
   "admin/utilisateur-detail": renderUtilisateurDetailPage,
   "admin/corbeille": renderCorbeillePage,
-  "admin/categories": renderCategoriesPage
+  "admin/categories": renderCategoriesPage,
+  "admin/produits": renderProduitsPage,
+  "admin/produit-detail": renderProduitDetailPage
 };
 
 const TITRES = {
@@ -28,6 +32,8 @@ const TITRES = {
   "admin/utilisateur-detail": "Détail de l'utilisateur",
   "admin/corbeille": "Corbeille",
   "admin/categories": "Catégories",
+  "admin/produits": "Produits",
+  "admin/produit-detail": "Détail du produit",
   "admin/dashboard": "Espace Direction"
 };
 
