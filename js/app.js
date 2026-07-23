@@ -1,4 +1,3 @@
-// app.js
 import { getSession, clearSession } from "./utils/session.js";
 import { renderSidebar } from "./components/sidebar.js";
 import { renderNavbar, renderPublicNavbar } from "./components/navbar.js";
