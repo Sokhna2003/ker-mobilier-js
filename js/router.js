@@ -5,6 +5,7 @@ import { renderArtisanDashboard } from "./pages/artisan/dashboardPage.js";
 import { renderArtisanProduitsPage } from "./pages/artisan/produitsPage.js";
 import { renderClientDashboard } from "./pages/client/dashboardPage.js";
 import { renderLivreurDashboard } from "./pages/livreur/dashboardPage.js";
+import { renderLivreurLivraisonsPage } from "./pages/livreur/livraisonsPage.js";
 import { renderUtilisateursPage } from "./pages/admin/utilisateursPage.js";
 import { renderUtilisateurDetailPage } from "./pages/admin/utilisateursDetailPage.js";
 import { renderCorbeillePage } from "./pages/admin/corbeillePage.js";
@@ -21,6 +22,7 @@ const routes = {
   "artisan/produits": renderArtisanProduitsPage,
   "client/dashboard": renderClientDashboard,
   "livreur/dashboard": renderLivreurDashboard,
+  "livreur/mes-livraisons": renderLivreurLivraisonsPage,
   "admin/utilisateurs": renderUtilisateursPage,
   "admin/utilisateur-detail": renderUtilisateurDetailPage,
   "admin/corbeille": renderCorbeillePage,
@@ -37,7 +39,8 @@ const TITRES = {
   "admin/produits": "Produits",
   "admin/produit-detail": "Détail du produit",
   "admin/dashboard": "Espace Direction",
-  "artisan/produits": "Mes Produits"
+  "artisan/produits": "Mes Produits",
+  "livreur/mes-livraisons": "Mes Livraisons"
 };
 
 export async function navigate(page) {
