@@ -1,5 +1,3 @@
-
-
 export function openRoleSelectionModal() {
   const root = document.getElementById("modalRoot");
   if (!root) return;
@@ -10,7 +8,7 @@ export function openRoleSelectionModal() {
 
   overlay.innerHTML = `
     <div class="w-full max-w-xl rounded-[2.5rem] bg-white p-6 shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-200">
-      
+
       <!-- En-tête de la modale -->
       <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
         <div>
@@ -24,7 +22,7 @@ export function openRoleSelectionModal() {
 
       <!-- Grille des 4 Cartes de Rôles -->
       <div class="grid grid-cols-2 gap-4">
-        
+
         <!-- CARTE 1 : ADMINISTRATEUR -->
         <button data-role="admin" class="group flex flex-col items-center justify-center p-5 rounded-2xl bg-amber-700 text-white transition duration-200 hover:bg-emerald-700 shadow-lg outline-none text-center">
           <div class="h-12 w-12 rounded-xl bg-white/10 flex items-center justify-center mb-3">
@@ -79,12 +77,12 @@ export function openRoleSelectionModal() {
     btn.addEventListener("click", () => {
       const selectedRole = btn.dataset.role;
       close();
-      
+
       // Mémorise temporairement le rôle choisi pour pré-remplir ou adapter le formulaire
       sessionStorage.setItem("chosen_role", selectedRole);
-      
+
       // Déclenche l'affichage de la page de connexion spécifique
-      window.location.hash = `login?role=${selectedRole}`; 
+      window.location.hash = `login?role=${selectedRole}`;
       window.location.reload();
     });
   });
