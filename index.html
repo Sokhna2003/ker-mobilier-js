@@ -1,0 +1,66 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kër Mobilier — Le mobilier sénégalais à portée de clic</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+            serif: ["Fraunces", "ui-serif", "Georgia", "serif"]
+          },
+          colors: {
+            terracotta: {
+              50: "#FDF3ED",
+              500: "#DD6B3B",
+              600: "#C6572A",
+              700: "#A6461F"
+            },
+            forest: {
+              700: "#2F4B36",
+              800: "#243A2A"
+            },
+            cream: "#FAF5EE"
+          },
+          boxShadow: {
+            soft: "0 20px 60px rgba(15, 23, 42, 0.12)"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="min-h-screen bg-cream font-sans text-slate-900">
+  
+  <!-- Zone d'ancrage pour le menu latéral -->
+  <div id="sidebarRoot"></div>
+  
+  <!-- CORRECTION : Voile noir pour le menu burger sur téléphone (cliquer à côté ferme le tiroir) -->
+  <div id="sidebarOverlay" class="fixed inset-0 z-30 bg-slate-950/40 hidden backdrop-blur-sm lg:hidden"></div>
+
+  <!-- Zone de navigation supérieure (contenant l'icône burger id="sidebarToggle") -->
+  <div id="navbarRoot"></div>
+
+  <main id="mainLayout" class="min-h-screen">
+    <div id="app"></div>
+  </main>
+
+  <div id="toast" class="pointer-events-none fixed right-5 top-20 z-50 hidden max-w-sm rounded-2xl px-4 py-3 text-sm font-semibold shadow-2xl"></div>
+
+  <div id="modalRoot"></div>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
