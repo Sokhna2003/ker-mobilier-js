@@ -81,9 +81,13 @@ export function renderLoginPage() {
 
       showToast(`Ravi de vous revoir !`, "success");
       
-      // On réactive les menus et on recharge l'application
+      // On réactive les menus
       document.getElementById("sidebarRoot")?.classList.remove("hidden");
       document.getElementById("navbarRoot")?.classList.remove("hidden");
+
+      // IMPORTANT : on vide le hash "#login?role=..." avant de recharger,
+      // sinon startApp() va nous renvoyer directement sur la page de login
+      window.location.hash = "";
       window.location.reload();
 
     } catch (err) {
