@@ -7,11 +7,14 @@ import { renderClientDashboard } from "./pages/client/dashboardPage.js";
 import { renderLivreurDashboard } from "./pages/livreur/dashboardPage.js";
 import { renderLivreurLivraisonsPage } from "./pages/livreur/livraisonsPage.js";
 import { renderUtilisateursPage } from "./pages/admin/utilisateursPage.js";
-import { renderUtilisateurDetailPage } from "./pages/admin/utilisateursDetailPage.js";
+import { renderUtilisateurDetailPage } from "./pages/admin/utilisateurDetailPage.js";
 import { renderCorbeillePage } from "./pages/admin/corbeillePage.js";
 import { renderCategoriesPage } from "./pages/admin/categoriesPage.js";
 import { renderProduitsPage } from "./pages/admin/produitsPage.js";
 import { renderProduitDetailPage } from "./pages/admin/produitDetailPage.js";
+import { renderAdminCommandesPage } from "./pages/admin/commandesPage.js";
+import { renderArtisanCommandesPage } from "./pages/artisan/commandesPage.js";
+import { renderClientCommandesPage } from "./pages/client/commandesPage.js";
 
 // Table de correspondance des routes (sans les paramètres ?...)
 const routes = {
@@ -28,7 +31,10 @@ const routes = {
   "admin/corbeille": renderCorbeillePage,
   "admin/categories": renderCategoriesPage,
   "admin/produits": renderProduitsPage,
-  "admin/produit-detail": renderProduitDetailPage
+  "admin/produit-detail": renderProduitDetailPage,
+  "admin/commandes": renderAdminCommandesPage,
+  "artisan/commandes": renderArtisanCommandesPage,
+  "client/commandes": renderClientCommandesPage
 };
 
 const TITRES = {
@@ -40,7 +46,10 @@ const TITRES = {
   "admin/produit-detail": "Détail du produit",
   "admin/dashboard": "Espace Direction",
   "artisan/produits": "Mes Produits",
-  "livreur/mes-livraisons": "Mes Livraisons"
+  "livreur/mes-livraisons": "Mes Livraisons",
+  "admin/commandes": "Commandes",
+  "artisan/commandes": "Mes Commandes",
+  "client/commandes": "Mes Commandes"
 };
 
 export async function navigate(page) {

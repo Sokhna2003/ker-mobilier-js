@@ -3,6 +3,8 @@ import { API_BASE_URL } from "../../config/api.js";
 import { apiRequest } from "../../services/apiClient.js";
 import { getAllProduits } from "../../services/produitservice.js";
 import { escapeHtml } from "../../utils/html.js";
+import { ajouterAuPanier, mettreAJourBadgePanier } from "../../utils/panier.js";
+import { showToast } from "../../components/toast.js";
 
 function placeholderUrl(label, w = 600, h = 450) {
   return `https://placehold.co/${w}x${h}/EDE1D3/2F4B36?text=${encodeURIComponent(label)}&font=raleway`;
@@ -220,7 +222,7 @@ function carteProduitHtml(p) {
           </div>
           <div class="flex items-center gap-2">
             <button class="rounded-xl bg-slate-900 px-3 py-1.5 text-[11px] font-bold text-white transition hover:bg-slate-800">Détails</button>
-            <button class="flex h-8 w-8 items-center justify-center rounded-xl bg-terracotta-500 text-white transition hover:bg-terracotta-600" title="Ajouter au panier">
+            <button data-ajouter-panier="${escapeHtml(p.id)}" class="flex h-8 w-8 items-center justify-center rounded-xl bg-terracotta-500 text-white transition hover:bg-terracotta-600" title="Ajouter au panier">
               <i class="fa-solid fa-plus text-xs"></i>
             </button>
           </div>
@@ -250,6 +252,16 @@ function rafraichirGrilleProduits() {
   grille.innerHTML = liste.length
     ? liste.map(carteProduitHtml).join("")
     : `<p class="col-span-full rounded-2xl border border-dashed border-slate-200 p-8 text-center text-xs font-bold text-slate-400">Aucun produit ne correspond à ces critères pour l'instant.</p>`;
+
+  grille.querySelectorAll("[data-ajouter-panier]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const produit = produitsEnrichis.find(p => p.id === btn.dataset.ajouterPanier);
+      if (!produit) return;
+      ajouterAuPanier(produit);
+      mettreAJourBadgePanier();
+      showToast(`${produit.nom} ajouté au panier.`);
+    });
+  });
 }
 
 function renderDevisSurMesure() {
