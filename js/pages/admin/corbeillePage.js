@@ -1,6 +1,7 @@
 import { getUtilisateursCorbeille, restaurerUtilisateur, supprimerDefinitivementUtilisateur } from "../../services/utilisateurservice.js";
 import { getCategoriesCorbeille, restaurerCategorie, supprimerDefinitivementCategorie } from "../../services/categorieservice.js";
 import { getProduitsCorbeille, republierProduit, supprimerDefinitivementProduit } from "../../services/produitservice.js";
+import { getAvisCorbeille, restaurerAvis, supprimerDefinitivementAvis } from "../../services/avisservice.js";
 import { escapeHtml } from "../../utils/html.js";
 import { showToast } from "../../components/toast.js";
 import { openConfirm } from "../../components/modal.js";
@@ -28,6 +29,13 @@ const TYPES_CORBEILLE = {
     restaurerLabel: "Republier",
     restaurer: republierProduit,
     supprimerDefinitivement: supprimerDefinitivementProduit
+  },
+  avis: {
+    label: "Avis",
+    badgeClasse: "bg-blue-50 text-blue-700",
+    restaurerLabel: "Restaurer",
+    restaurer: restaurerAvis,
+    supprimerDefinitivement: supprimerDefinitivementAvis
   }
 };
 
@@ -38,10 +46,11 @@ export async function renderCorbeillePage() {
   const app = document.getElementById("app");
 
   try {
-    const [utilisateurs, categories, produits] = await Promise.all([
+    const [utilisateurs, categories, produits, avis] = await Promise.all([
       getUtilisateursCorbeille(),
       getCategoriesCorbeille(),
-      getProduitsCorbeille()
+      getProduitsCorbeille(),
+      getAvisCorbeille()
     ]);
 
     elementsCorbeille = [
@@ -65,6 +74,13 @@ export async function renderCorbeillePage() {
         titre: p.nom,
         sousTitre: `${Number(p.prix).toLocaleString()} FCFA`,
         dateSuppression: p.dateSuppression
+      })),
+      ...avis.map(a => ({
+        type: "avis",
+        id: a.id,
+        titre: `Avis (${a.note}★)`,
+        sousTitre: a.commentaire,
+        dateSuppression: a.dateSuppression
       }))
     ];
 
@@ -84,6 +100,7 @@ export async function renderCorbeillePage() {
             <option value="utilisateur">Utilisateurs</option>
             <option value="categorie">Catégories</option>
             <option value="produit">Produits</option>
+            <option value="avis">Avis</option>
           </select>
         </div>
 

@@ -38,6 +38,16 @@ export async function assignerLivreur(commandeId, livreurId) {
   return livraison;
 }
 
+// ---------- Vue admin : reassignation ----------
+
+export async function reassignerLivreur(livraisonId, nouveauLivreurId) {
+  return apiRequest(
+    `${API_BASE_URL}/livraisons/${livraisonId}`,
+    { method: "PATCH", body: JSON.stringify({ livreurId: nouveauLivreurId }) },
+    "Impossible de réassigner cette livraison."
+  );
+}
+
 // ---------- Etape 5 : le livreur accepte et recupere le meuble ----------
 
 export async function accepterLivraison(id) {

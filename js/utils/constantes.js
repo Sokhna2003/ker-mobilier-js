@@ -47,6 +47,22 @@ export const STATUTS_LIVRAISON = {
   ANNULEE: { label: "Annulée", classe: "bg-rose-50 text-rose-700" }
 };
 
+// Cycle de vie d'une demande sur mesure :
+// EN_ATTENTE (soumise par le client) -> VALIDEE (visible par les artisans) | REJETEE
+export const STATUTS_DEMANDE_SUR_MESURE = {
+  EN_ATTENTE: { label: "En attente de validation", classe: "bg-slate-100 text-slate-600" },
+  VALIDEE: { label: "Validée", classe: "bg-emerald-50 text-emerald-700" },
+  REJETEE: { label: "Rejetée", classe: "bg-rose-50 text-rose-700" }
+};
+
+export function labelStatutDemandeSurMesure(statut) {
+  return STATUTS_DEMANDE_SUR_MESURE[statut]?.label || statut;
+}
+
+export function classeStatutDemandeSurMesure(statut) {
+  return STATUTS_DEMANDE_SUR_MESURE[statut]?.classe || "bg-slate-100 text-slate-600";
+}
+
 export function labelStatutCommande(statut) {
   return STATUTS_COMMANDE[statut]?.label || statut;
 }
