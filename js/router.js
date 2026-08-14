@@ -18,6 +18,9 @@ import { renderClientCommandesPage } from "./pages/client/commandesPage.js";
 import { renderAdminLivraisonsPage } from "./pages/admin/livraisonsPage.js";
 import { renderAdminSurMesurePage } from "./pages/admin/surMesurePage.js";
 import { renderAdminAvisPage } from "./pages/admin/avisPage.js";
+import { renderArtisanSurMesurePage } from "./pages/artisan/surMesurePage.js";
+import { renderArtisanPropositionsPage } from "./pages/artisan/propositionsPage.js";
+import { renderArtisanAvisPage } from "./pages/artisan/avisPage.js";
 
 // Table de correspondance des routes (sans les paramètres ?...)
 const routes = {
@@ -40,7 +43,10 @@ const routes = {
   "client/commandes": renderClientCommandesPage,
   "admin/livraison": renderAdminLivraisonsPage,
   "admin/sur-mesure": renderAdminSurMesurePage,
-  "admin/avis": renderAdminAvisPage
+  "admin/avis": renderAdminAvisPage,
+  "artisan/sur-mesure": renderArtisanSurMesurePage,
+  "artisan/propositions": renderArtisanPropositionsPage,
+  "artisan/avis": renderArtisanAvisPage
 };
 
 const TITRES = {
@@ -58,7 +64,10 @@ const TITRES = {
   "client/commandes": "Mes Commandes",
   "admin/livraison": "Livraisons",
   "admin/sur-mesure": "Fabrication sur mesure",
-  "admin/avis": "Avis"
+  "admin/avis": "Avis",
+  "artisan/sur-mesure": "Fabrication sur mesure",
+  "artisan/propositions": "Mes Propositions",
+  "artisan/avis": "Avis Reçus"
 };
 
 export async function navigate(page) {

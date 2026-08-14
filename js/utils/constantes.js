@@ -26,6 +26,8 @@ export const OPTIONS_TRI = [
 ];
 
 
+// utils/constantes.js
+
 // Cycle de vie d'une commande (cf. scénario validé) :
 // EN_ATTENTE -> (artisan répond) -> EN_PREPARATION | REJETEE
 // EN_PREPARATION -> PRET_A_LIVRER -> (admin assigne un livreur) -> EN_LIVRAISON -> TERMINEE
@@ -61,6 +63,22 @@ export function labelStatutDemandeSurMesure(statut) {
 
 export function classeStatutDemandeSurMesure(statut) {
   return STATUTS_DEMANDE_SUR_MESURE[statut]?.classe || "bg-slate-100 text-slate-600";
+}
+
+// Cycle de vie d'une proposition (devis d'artisan) :
+// EN_ATTENTE (envoyee) -> ACCEPTEE (choisie par le client) | REFUSEE
+export const STATUTS_PROPOSITION = {
+  EN_ATTENTE: { label: "En attente", classe: "bg-slate-100 text-slate-600" },
+  ACCEPTEE: { label: "Acceptée", classe: "bg-emerald-50 text-emerald-700" },
+  REFUSEE: { label: "Refusée", classe: "bg-rose-50 text-rose-700" }
+};
+
+export function labelStatutProposition(statut) {
+  return STATUTS_PROPOSITION[statut]?.label || statut;
+}
+
+export function classeStatutProposition(statut) {
+  return STATUTS_PROPOSITION[statut]?.classe || "bg-slate-100 text-slate-600";
 }
 
 export function labelStatutCommande(statut) {
