@@ -5,6 +5,22 @@ export async function getAllDemandesSurMesure() {
   return apiRequest(`${API_BASE_URL}/demandesSurMesure`, {}, "Impossible de charger les demandes sur mesure.");
 }
 
+export async function getDemandesParClient(clientId) {
+  const toutes = await getAllDemandesSurMesure();
+  return toutes.filter(d => d.clientId === clientId);
+}
+
+// Le client choisit l'artisan qui réalisera son meuble : ferme la demande
+export async function cloturerDemandeSurMesure(id, artisanChoisiId) {
+  return apiRequest(
+    `${API_BASE_URL}/demandesSurMesure/${id}`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ artisanChoisiId, dateCloture: new Date().toISOString().split("T")[0] })
+    },
+    "Impossible de clôturer cette demande."
+  );
+}
 export async function getDemandeSurMesureById(id) {
   return apiRequest(`${API_BASE_URL}/demandesSurMesure/${id}`, {}, "Impossible de charger cette demande.");
 }
