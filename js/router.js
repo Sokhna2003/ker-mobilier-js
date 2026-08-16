@@ -24,6 +24,8 @@ import { renderArtisanAvisPage } from "./pages/artisan/avisPage.js";
 import { renderClientLivraisonsPage } from "./pages/client/livraisonsPage.js";
 import { renderClientPropositionsPage } from "./pages/client/propositionsPage.js";
 import { renderClientAvisPage } from "./pages/client/avisPage.js";
+import { renderLivreurSuiviPage } from "./pages/livreur/suiviPage.js";
+import { renderLivreurHistoriquePage } from "./pages/livreur/historiquePage.js";
 
 // Table de correspondance des routes (sans les paramètres ?...)
 const routes = {
@@ -52,7 +54,9 @@ const routes = {
   "artisan/avis": renderArtisanAvisPage,
   "client/livraisons": renderClientLivraisonsPage,
   "client/propositions": renderClientPropositionsPage,
-  "client/avis": renderClientAvisPage
+  "client/avis": renderClientAvisPage,
+  "livreur/suivi": renderLivreurSuiviPage,
+  "livreur/historique": renderLivreurHistoriquePage
 };
 
 const TITRES = {
@@ -76,7 +80,9 @@ const TITRES = {
   "artisan/avis": "Avis Reçus",
   "client/livraisons": "Suivi des Livraisons",
   "client/propositions": "Propositions des artisans",
-  "client/avis": "Mes Avis"
+  "client/avis": "Mes Avis",
+  "livreur/suivi": "Suivi des livraisons",
+  "livreur/historique": "Historique"
 };
 
 export async function navigate(page) {
