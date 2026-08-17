@@ -1,9 +1,11 @@
+// app.js
 import { getSession, clearSession } from "./utils/session.js";
 import { renderSidebar } from "./components/sidebar.js";
 import { renderNavbar, renderPublicNavbar } from "./components/navbar.js";
 import { renderFooter } from "./components/footer.js";
 import { navigate } from "./router.js";
-import { openRoleSelectionModal } from "./components/modalSelectionRole.js";
+import { ouvrirPanierModal } from "./components/panierModal.js";
+import { mettreAJourBadgePanier } from "./utils/panier.js";
 
 const ROLES_BACK_OFFICE = ["admin", "artisan", "client", "livreur"];
 
@@ -49,6 +51,7 @@ function startApp() {
   const user = getSession();
 
   mountLayout();
+  mettreAJourBadgePanier();
 
   if (window.location.hash.startsWith("#login")) {
     navigate("login");
@@ -83,7 +86,12 @@ document.addEventListener("click", (e) => {
 
   if (e.target.closest("#openLoginModalBtn") || e.target.closest("#navLoginBtn") || e.target.closest("#loginBtn")) {
     e.preventDefault();
-    openRoleSelectionModal();
+    navigate("login");
+  }
+
+  if (e.target.closest("#panierBtn")) {
+    e.preventDefault();
+    ouvrirPanierModal();
   }
 
   if (e.target.closest("#logoutBtn")) {

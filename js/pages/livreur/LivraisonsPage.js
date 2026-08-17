@@ -1,24 +1,12 @@
-import { getAllLivraisons } from "../../services/livraisonservice.js";
+import { getAllLivraisons, accepterLivraison, marquerLivraisonEffectuee } from "../../services/livraisonservice.js";
 import { getAllCommandes, getAllLignesCommande } from "../../services/commandeservice.js";
 import { getAllProduits } from "../../services/produitservice.js";
 import { getAllUtilisateurs } from "../../services/utilisateurservice.js";
 import { getSession } from "../../utils/session.js";
 import { escapeHtml } from "../../utils/html.js";
 import { showToast } from "../../components/toast.js";
-
-const LABEL_STATUT = {
-  EN_COURS: "En cours",
-  ATTRIBUEE: "Attribuée",
-  LIVREE: "Livrée",
-  ANNULEE: "Annulée"
-};
-
-const CLASSE_STATUT = {
-  EN_COURS: "bg-blue-50 text-blue-700",
-  ATTRIBUEE: "bg-amber-50 text-amber-700",
-  LIVREE: "bg-emerald-50 text-emerald-700",
-  ANNULEE: "bg-rose-50 text-rose-700"
-};
+import { openConfirm } from "../../components/modal.js";
+import { labelStatutLivraison, classeStatutLivraison } from "../../utils/constantes.js";
 
 let mesLivraisons = [];
 let filtreTexte = "";
@@ -128,10 +116,40 @@ function afficherLivraisons() {
   document.querySelectorAll("[data-ouvrir-carte]").forEach(btn => {
     btn.addEventListener("click", () => showToast("L'ouverture cartographique de l'itinéraire arrive bientôt."));
   });
+
+  document.querySelectorAll("[data-accepter-livraison]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      try {
+        await accepterLivraison(btn.dataset.accepterLivraison);
+        showToast("Livraison acceptée. Récupérez le meuble chez l'artisan.");
+        await renderLivreurLivraisonsPage();
+      } catch (error) {
+        showToast(error.message, "error");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-livraison-effectuee]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      openConfirm({
+        message: "Confirmer que ce meuble a bien été livré au client ?",
+        confirmLabel: "Confirmer la livraison",
+        onConfirm: async () => {
+          try {
+            await marquerLivraisonEffectuee(btn.dataset.livraisonEffectuee, btn.dataset.commande);
+            showToast("Livraison finalisée. La commande est marquée terminée.");
+            await renderLivreurLivraisonsPage();
+          } catch (error) {
+            showToast(error.message, "error");
+          }
+        }
+      });
+    });
+  });
 }
 
 function carteMissionHtml(m) {
-  const classeStatut = CLASSE_STATUT[m.statut] || "bg-slate-100 text-slate-600";
+  const classeStatut = classeStatutLivraison(m.statut);
 
   return `
     <article class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -141,7 +159,7 @@ function carteMissionHtml(m) {
           <p class="text-base font-black text-slate-950">${escapeHtml(m.id)}</p>
         </div>
         <span class="inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-black uppercase ${classeStatut}">
-          ${escapeHtml(LABEL_STATUT[m.statut] || m.statut)}
+          ${escapeHtml(labelStatutLivraison(m.statut))}
         </span>
       </div>
 
@@ -179,8 +197,19 @@ function carteMissionHtml(m) {
         </div>
       </div>
 
+      ${m.statut === "ATTRIBUEE" ? `
+        <button data-accepter-livraison="${escapeHtml(m.id)}" class="mt-1 w-full rounded-full bg-amber-600 py-2.5 text-xs font-black text-white transition hover:bg-amber-700">
+          <i class="fa-solid fa-check mr-1"></i> Accepter la livraison
+        </button>
+      ` : ""}
+      ${m.statut === "EN_LIVRAISON" ? `
+        <button data-livraison-effectuee="${escapeHtml(m.id)}" data-commande="${escapeHtml(m.commandeId)}" class="mt-1 w-full rounded-full bg-emerald-700 py-2.5 text-xs font-black text-white transition hover:bg-emerald-800">
+          <i class="fa-solid fa-flag-checkered mr-1"></i> Livraison effectuée
+        </button>
+      ` : ""}
+
       <div class="flex items-center gap-2 pt-1">
-        <button data-ouvrir-carte="${escapeHtml(m.id)}" class="flex-1 rounded-full bg-emerald-700 py-2.5 text-xs font-black text-white transition hover:bg-emerald-800">
+        <button data-ouvrir-carte="${escapeHtml(m.id)}" class="flex-1 rounded-full bg-slate-900 py-2.5 text-xs font-black text-white transition hover:bg-slate-800">
           Ouvrir sur la carte
         </button>
         ${m.telephoneClient ? `

@@ -1,19 +1,16 @@
+// navbar.js
 import { getSession } from "../utils/session.js";
 import { escapeHtml } from "../utils/html.js";
 
-
 /**
- * Génère la barre de navigation supérieure sombre pour tous les acteurs connectés.
- * S'adapte dynamiquement selon que l'utilisateur est admin, artisan, livreur ou client.
- */
-
-/**
- * Sur Mobile : Contient uniquement [Logo | Recherche | Menu Burger]
+ * Navbar de l'espace connecté (admin / artisan) : fixe, avec sidebar à gauche,
+ * recherche et profil. Utilisée uniquement quand un utilisateur avec rôle
+ * back-office est connecté.
  */
 export function renderNavbar() {
   const user = getSession();
-  const prenomAafficher = user?.prenom || user?.atelier || "Utilisateur";
-  
+  const nomComplet = user?.prenom ? `${user.prenom} ${user.nom}` : (user?.atelier || "Utilisateur");
+
   let roleLibelle = "Client";
   if (user?.role === "admin") roleLibelle = "Admin";
   if (user?.role === "artisan") roleLibelle = "Artisan";
@@ -21,7 +18,7 @@ export function renderNavbar() {
 
   return `
     <header class="fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between bg-slate-950 px-4 text-white shadow-md w-full lg:px-6">
-      
+
       <!-- 1. GAUCHE : Logo de l'application -->
       <div class="flex items-center cursor-pointer flex-none" data-page="accueil/boutique">
         <span class="font-serif text-sm sm:text-base font-extrabold tracking-tight text-white hover:text-amber-500 transition">
@@ -29,7 +26,7 @@ export function renderNavbar() {
         </span>
       </div>
 
-      <!-- 2. CENTRE : La barre de recherche (toujours visible, s'adapte en largeur flex-1) -->
+      <!-- 2. CENTRE : la barre de recherche -->
       <div class="relative flex-1 max-w-xs sm:max-w-md mx-3">
         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
           <i class="fa-solid fa-magnifying-glass text-xs"></i>
@@ -39,8 +36,7 @@ export function renderNavbar() {
 
       <!-- 3. DROITE : Zone contextuelle PC ou Bouton Burger Mobile -->
       <div class="flex items-center gap-4 flex-none">
-        
-        <!-- Blocs utilitaires masqués sur téléphone (visible uniquement sur lg: PC) -->
+
         <div class="hidden lg:flex items-center gap-6">
           <button data-page="accueil/boutique" class="inline-flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900 px-3 py-1.5 text-xs font-bold text-slate-300 transition hover:bg-slate-800 hover:text-white">
             <i class="fa-solid fa-eye text-[11px]"></i>
@@ -58,13 +54,13 @@ export function renderNavbar() {
               <i class="fa-solid fa-user text-xs"></i>
             </div>
             <div class="text-left leading-none">
-              <p class="text-xs font-black text-white">${escapeHtml(prenomAafficher)}</p>
+              <p class="text-xs font-black text-white">${escapeHtml(nomComplet)}</p>
               <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">${escapeHtml(roleLibelle)}</p>
             </div>
           </div>
         </div>
 
-        <!-- LE MENU BURGER : Placé tout à droite, visible UNIQUEMENT sur mobile (lg:hidden) -->
+        <!-- LE MENU BURGER : visible UNIQUEMENT sur mobile -->
         <button id="sidebarToggle" class="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-white transition hover:bg-slate-800 lg:hidden" aria-label="Ouvrir le menu">
           <i class="fa-solid fa-bars text-sm"></i>
         </button>
@@ -108,12 +104,11 @@ export function renderPublicNavbar() {
           <button class="hidden h-9 w-9 items-center justify-center rounded-full text-slate-600 transition hover:bg-black/5 sm:flex" title="Favoris">
             <i class="fa-regular fa-heart"></i>
           </button>
-          <button class="hidden h-9 w-9 items-center justify-center rounded-full text-slate-600 transition hover:bg-black/5 sm:flex" title="Panier">
+          <button id="panierBtn" class="relative hidden h-9 w-9 items-center justify-center rounded-full text-slate-600 transition hover:bg-black/5 sm:flex" title="Panier">
             <i class="fa-solid fa-bag-shopping"></i>
+            <span id="badgePanier" class="absolute -right-1 -top-1 hidden h-4 min-w-[16px] items-center justify-center rounded-full bg-terracotta-500 px-1 text-[9px] font-black text-white">0</span>
           </button>
-          
-          <!-- CORRECTION : Ajout de l'ID pour déclencher la modale et harmonisation bg -->
-          <button id="openLoginModalBtn" class="rounded-full bg-amber-700 px-5 py-2 text-xs font-black uppercase tracking-wide text-white shadow-sm transition hover:bg-emerald-700">
+          <button id="openLoginModalBtn" class="rounded-full bg-terracotta-500 px-5 py-2 text-xs font-black uppercase tracking-wide text-white shadow-sm transition hover:bg-terracotta-600">
             Connexion
           </button>
         </div>
