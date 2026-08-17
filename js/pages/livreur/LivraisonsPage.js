@@ -12,7 +12,7 @@ const LABEL_STATUT = {
   LIVREE: "Livrée",
   ANNULEE: "Annulée"
 };
-
+ 
 const CLASSE_STATUT = {
   EN_COURS: "bg-blue-50 text-blue-700",
   ATTRIBUEE: "bg-amber-50 text-amber-700",
