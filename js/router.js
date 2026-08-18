@@ -8,7 +8,7 @@ import { renderLivreurDashboard } from "./pages/livreur/dashboardPage.js";
 import { renderLivreurLivraisonsPage } from "./pages/livreur/livraisonsPage.js";
 import { renderUtilisateursPage } from "./pages/admin/utilisateursPage.js";
 import { renderUtilisateurDetailPage } from "./pages/admin/utilisateurDetailPage.js";
-import { renderCorbeillePage } from "./pages/admin/corbeillePage.js";
+import { renderCorbeillePage } from "./pages/admin/corbeillePage.js"; 
 import { renderCategoriesPage } from "./pages/admin/categoriesPage.js";
 import { renderProduitsPage } from "./pages/admin/produitsPage.js";
 import { renderProduitDetailPage } from "./pages/admin/produitDetailPage.js";

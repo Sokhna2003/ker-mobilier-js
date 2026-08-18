@@ -25,12 +25,12 @@ export function renderLoginPage() {
                   <div id="globalLoginError" class="hidden bg-rose-50 text-rose-600 text-xs font-bold p-3 rounded-xl border border-red-100 text-center"></div>
 
                   <div>
-                    <input type="email" id="loginEmail" placeholder="Adresse e-mail"
+                    <input type="email" id="loginEmail" placeholder="Adresse e-mail" 
                         class="w-full bg-slate-50 text-gray-800 rounded-2xl px-4 py-3.5 text-sm border-0 focus:outline-none focus:ring-4 focus:ring-amber-50 font-medium" />
                   </div>
 
                   <div>
-                    <input type="password" id="loginPassword" placeholder="Mot de passe"
+                    <input type="password" id="loginPassword" placeholder="Mot de passe" 
                         class="w-full bg-slate-50 text-gray-800 rounded-2xl px-4 py-3.5 text-sm border-0 focus:outline-none focus:ring-4 focus:ring-amber-50 font-medium" />
                   </div>
 
