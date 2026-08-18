@@ -5,22 +5,9 @@ import { getAllUtilisateurs } from "../../services/utilisateurservice.js";
 import { getSession } from "../../utils/session.js";
 import { escapeHtml } from "../../utils/html.js";
 import { showToast } from "../../components/toast.js";
-
-const LABEL_STATUT = {
-  EN_COURS: "En cours",
-  ATTRIBUEE: "Attribuée",
-  LIVREE: "Livrée",
-  ANNULEE: "Annulée"
-};
-
-
-const CLASSE_STATUT = {
-  EN_COURS: "bg-blue-50 text-blue-700",
-  ATTRIBUEE: "bg-amber-50 text-amber-700",
-  LIVREE: "bg-emerald-50 text-emerald-700",
-  ANNULEE: "bg-rose-50 text-rose-700"
-};
-
+import { openConfirm } from "../../components/modal.js";
+import { labelStatutLivraison, classeStatutLivraison } from "../../utils/constantes.js";
+ 
 let mesLivraisons = [];
 let filtreTexte = "";
 let filtreStatut = "tout";
