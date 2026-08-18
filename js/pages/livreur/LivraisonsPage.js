@@ -7,7 +7,7 @@ import { escapeHtml } from "../../utils/html.js";
 import { showToast } from "../../components/toast.js";
 import { openConfirm } from "../../components/modal.js";
 import { labelStatutLivraison, classeStatutLivraison } from "../../utils/constantes.js";
-
+ 
 let mesLivraisons = [];
 let filtreTexte = "";
 let filtreStatut = "tout";

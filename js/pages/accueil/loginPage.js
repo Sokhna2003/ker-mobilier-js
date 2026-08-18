@@ -1,5 +1,6 @@
 import { loginUser } from "../../services/authservice.js";
 import { showToast } from "../../components/toast.js";
+import { required, validerFormulaire, supprimerErreurChamp } from "../../utils/validator.js";
 
 export function renderLoginPage() {
   const app = document.getElementById("app");
@@ -19,17 +20,17 @@ export function renderLoginPage() {
                   <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Connectez-vous à votre espace Kër Mobilier</p>
               </div>
 
-              <form id="spaLoginForm" class="space-y-4">
-                  <!-- Zone rouge pour l'affichage de l'erreur en haut de l'input -->
+              <form id="spaLoginForm" class="space-y-4" novalidate>
+                  <!-- Zone rouge réservée aux erreurs d'identifiants (pas aux champs vides) -->
                   <div id="globalLoginError" class="hidden bg-rose-50 text-rose-600 text-xs font-bold p-3 rounded-xl border border-red-100 text-center"></div>
 
                   <div>
-                    <input type="email" id="loginEmail" placeholder="Adresse e-mail" required
+                    <input type="email" id="loginEmail" placeholder="Adresse e-mail"
                         class="w-full bg-slate-50 text-gray-800 rounded-2xl px-4 py-3.5 text-sm border-0 focus:outline-none focus:ring-4 focus:ring-amber-50 font-medium" />
                   </div>
 
                   <div>
-                    <input type="password" id="loginPassword" placeholder="Mot de passe" required
+                    <input type="password" id="loginPassword" placeholder="Mot de passe"
                         class="w-full bg-slate-50 text-gray-800 rounded-2xl px-4 py-3.5 text-sm border-0 focus:outline-none focus:ring-4 focus:ring-amber-50 font-medium" />
                   </div>
 
@@ -52,10 +53,14 @@ export function renderLoginPage() {
     </div>
   `;
 
+  // Efface le message rouge d'un champ dès que l'utilisateur recommence à le remplir
+  document.getElementById("loginEmail").addEventListener("input", () => supprimerErreurChamp("loginEmail"));
+  document.getElementById("loginPassword").addEventListener("input", () => supprimerErreurChamp("loginPassword"));
+
   document.getElementById("spaLoginForm")?.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const email = document.getElementById("loginEmail").value;
+    const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value;
     const errorBox = document.getElementById("globalLoginError");
 
@@ -64,9 +69,16 @@ export function renderLoginPage() {
       errorBox.classList.add("hidden");
     }
 
+    // 1. Champs obligatoires : message rouge sous le champ concerné, on s'arrête là
+    const estValide = validerFormulaire([
+      { id: "loginEmail", verifications: [() => required(email, "L'adresse e-mail est obligatoire.")] },
+      { id: "loginPassword", verifications: [() => required(password, "Le mot de passe est obligatoire.")] }
+    ]);
+    if (!estValide) return;
+
+    // 2. Seulement si les deux champs sont remplis : on tente la connexion,
+    // et "email ou mot de passe incorrect" ne peut apparaître qu'ici.
     try {
-      // Plus de vérification de rôle présélectionné : on se connecte avec
-      // n'importe quel compte valide, et startApp() redirige selon user.role.
       await loginUser(email, password);
 
       showToast("Ravi de vous revoir !", "success");
