@@ -8,7 +8,7 @@ import { renderLivreurDashboard } from "./pages/livreur/dashboardPage.js";
 import { renderLivreurLivraisonsPage } from "./pages/livreur/livraisonsPage.js";
 import { renderUtilisateursPage } from "./pages/admin/utilisateursPage.js";
 import { renderUtilisateurDetailPage } from "./pages/admin/utilisateurDetailPage.js";
-import { renderCorbeillePage } from "./pages/admin/corbeillePage.js"; 
+import { renderCorbeillePage } from "./pages/admin/corbeillePage.js";
 import { renderCategoriesPage } from "./pages/admin/categoriesPage.js";
 import { renderProduitsPage } from "./pages/admin/produitsPage.js";
 import { renderProduitDetailPage } from "./pages/admin/produitDetailPage.js";
@@ -85,12 +85,19 @@ const TITRES = {
   "livreur/historique": "Historique"
 };
 
+let pageActuelle = "accueil/boutique";
+
+export function getPageActuelle() {
+  return pageActuelle;
+}
+
 export async function navigate(page) {
   const app = document.getElementById("app");
 
   // Une route peut porter des paramètres : "admin/utilisateur-detail?id=user-artisan-1"
   const [base, queryString] = page.split("?");
   const params = new URLSearchParams(queryString || "");
+  pageActuelle = base;
 
   // Si la route demandée n'existe pas, retour à la boutique
   const routeFunction = routes[base] || routes["accueil/boutique"];
@@ -105,6 +112,14 @@ export async function navigate(page) {
   const navbarTitle = document.getElementById("navbarTitle");
   if (navbarTitle) {
     navbarTitle.textContent = TITRES[base] || "Boutique Kër Mobilier";
+  }
+
+  // Rafraîchit le focus de la sidebar sur la page active (import dynamique
+  // pour éviter tout souci de dépendance circulaire avec sidebar.js)
+  const sidebarEl = document.getElementById("sidebarRoot");
+  if (sidebarEl && !sidebarEl.classList.contains("hidden")) {
+    const { renderSidebar } = await import("./components/sidebar.js");
+    sidebarEl.innerHTML = renderSidebar();
   }
 
   try {
