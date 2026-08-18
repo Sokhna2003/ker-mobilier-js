@@ -7,11 +7,25 @@ import { renderClientDashboard } from "./pages/client/dashboardPage.js";
 import { renderLivreurDashboard } from "./pages/livreur/dashboardPage.js";
 import { renderLivreurLivraisonsPage } from "./pages/livreur/livraisonsPage.js";
 import { renderUtilisateursPage } from "./pages/admin/utilisateursPage.js";
-import { renderUtilisateurDetailPage } from "./pages/admin/utilisateursDetailPage.js";
+import { renderUtilisateurDetailPage } from "./pages/admin/utilisateurDetailPage.js";
 import { renderCorbeillePage } from "./pages/admin/corbeillePage.js";
 import { renderCategoriesPage } from "./pages/admin/categoriesPage.js";
 import { renderProduitsPage } from "./pages/admin/produitsPage.js";
 import { renderProduitDetailPage } from "./pages/admin/produitDetailPage.js";
+import { renderAdminCommandesPage } from "./pages/admin/commandesPage.js";
+import { renderArtisanCommandesPage } from "./pages/artisan/commandesPage.js";
+import { renderClientCommandesPage } from "./pages/client/commandesPage.js";
+import { renderAdminLivraisonsPage } from "./pages/admin/livraisonsPage.js";
+import { renderAdminSurMesurePage } from "./pages/admin/surMesurePage.js";
+import { renderAdminAvisPage } from "./pages/admin/avisPage.js";
+import { renderArtisanSurMesurePage } from "./pages/artisan/surMesurePage.js";
+import { renderArtisanPropositionsPage } from "./pages/artisan/propositionsPage.js";
+import { renderArtisanAvisPage } from "./pages/artisan/avisPage.js";
+import { renderClientLivraisonsPage } from "./pages/client/livraisonsPage.js";
+import { renderClientPropositionsPage } from "./pages/client/propositionsPage.js";
+import { renderClientAvisPage } from "./pages/client/avisPage.js";
+import { renderLivreurSuiviPage } from "./pages/livreur/suiviPage.js";
+import { renderLivreurHistoriquePage } from "./pages/livreur/historiquePage.js";
 
 // Table de correspondance des routes (sans les paramètres ?...)
 const routes = {
@@ -28,7 +42,21 @@ const routes = {
   "admin/corbeille": renderCorbeillePage,
   "admin/categories": renderCategoriesPage,
   "admin/produits": renderProduitsPage,
-  "admin/produit-detail": renderProduitDetailPage
+  "admin/produit-detail": renderProduitDetailPage,
+  "admin/commandes": renderAdminCommandesPage,
+  "artisan/commandes": renderArtisanCommandesPage,
+  "client/commandes": renderClientCommandesPage,
+  "admin/livraison": renderAdminLivraisonsPage,
+  "admin/sur-mesure": renderAdminSurMesurePage,
+  "admin/avis": renderAdminAvisPage,
+  "artisan/sur-mesure": renderArtisanSurMesurePage,
+  "artisan/propositions": renderArtisanPropositionsPage,
+  "artisan/avis": renderArtisanAvisPage,
+  "client/livraisons": renderClientLivraisonsPage,
+  "client/propositions": renderClientPropositionsPage,
+  "client/avis": renderClientAvisPage,
+  "livreur/suivi": renderLivreurSuiviPage,
+  "livreur/historique": renderLivreurHistoriquePage
 };
 
 const TITRES = {
@@ -40,8 +68,28 @@ const TITRES = {
   "admin/produit-detail": "Détail du produit",
   "admin/dashboard": "Espace Direction",
   "artisan/produits": "Mes Produits",
-  "livreur/mes-livraisons": "Mes Livraisons"
+  "livreur/mes-livraisons": "Mes Livraisons",
+  "admin/commandes": "Commandes",
+  "artisan/commandes": "Mes Commandes",
+  "client/commandes": "Mes Commandes",
+  "admin/livraison": "Livraisons",
+  "admin/sur-mesure": "Fabrication sur mesure",
+  "admin/avis": "Avis",
+  "artisan/sur-mesure": "Fabrication sur mesure",
+  "artisan/propositions": "Mes Propositions",
+  "artisan/avis": "Avis Reçus",
+  "client/livraisons": "Suivi des Livraisons",
+  "client/propositions": "Propositions des artisans",
+  "client/avis": "Mes Avis",
+  "livreur/suivi": "Suivi des livraisons",
+  "livreur/historique": "Historique"
 };
+
+let pageActuelle = "accueil/boutique";
+
+export function getPageActuelle() {
+  return pageActuelle;
+}
 
 export async function navigate(page) {
   const app = document.getElementById("app");
@@ -49,6 +97,7 @@ export async function navigate(page) {
   // Une route peut porter des paramètres : "admin/utilisateur-detail?id=user-artisan-1"
   const [base, queryString] = page.split("?");
   const params = new URLSearchParams(queryString || "");
+  pageActuelle = base;
 
   // Si la route demandée n'existe pas, retour à la boutique
   const routeFunction = routes[base] || routes["accueil/boutique"];
@@ -63,6 +112,14 @@ export async function navigate(page) {
   const navbarTitle = document.getElementById("navbarTitle");
   if (navbarTitle) {
     navbarTitle.textContent = TITRES[base] || "Boutique Kër Mobilier";
+  }
+
+  // Rafraîchit le focus de la sidebar sur la page active (import dynamique
+  // pour éviter tout souci de dépendance circulaire avec sidebar.js)
+  const sidebarEl = document.getElementById("sidebarRoot");
+  if (sidebarEl && !sidebarEl.classList.contains("hidden")) {
+    const { renderSidebar } = await import("./components/sidebar.js");
+    sidebarEl.innerHTML = renderSidebar();
   }
 
   try {

@@ -1,5 +1,6 @@
 import { getSession } from "../utils/session.js";
 import { escapeHtml } from "../utils/html.js";
+import { getPageActuelle } from "../router.js";
 
 /**
  * Génère le menu latéral gauche (Sidebar) dynamique.
@@ -51,11 +52,11 @@ export function renderSidebar() {
     ];
   }
 
-  const pageActuelle = window.location.hash.replace("#", "") || `${role}/dashboard`;
+  const pageActuelle = getPageActuelle();
 
   // 2. Rendu des boutons de navigation (Parfaitement centrés avec mx-auto)
   const itemsHtml = onglets.map(o => {
-    const estActif = pageActuelle === o.page || (pageActuelle === "login" && o.page.includes("dashboard"));
+    const estActif = pageActuelle === o.page;
 
     const classeBouton = estActif
       ? "flex items-center gap-3 w-[88%] mx-auto rounded-2xl px-4 py-3 text-left text-xs font-black bg-[#0B132B] text-white shadow-md"
