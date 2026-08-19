@@ -11,7 +11,7 @@ import { renderUtilisateurDetailPage } from "./pages/admin/utilisateurDetailPage
 import { renderCorbeillePage } from "./pages/admin/corbeillePage.js";
 import { renderCategoriesPage } from "./pages/admin/categoriesPage.js";
 import { renderProduitsPage } from "./pages/admin/produitsPage.js";
-import { renderProduitDetailPage } from "./pages/admin/produitDetailPage.js";
+import { renderProduitDetailPage } from "./pages/admin/produitDetailsPage.js";
 import { renderAdminCommandesPage } from "./pages/admin/commandesPage.js";
 import { renderArtisanCommandesPage } from "./pages/artisan/commandesPage.js";
 import { renderClientCommandesPage } from "./pages/client/commandesPage.js";
