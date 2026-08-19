@@ -78,7 +78,7 @@ function renderHero() {
   return `
     <section class="relative overflow-hidden">
       <div class="absolute inset-0">
-        <img src="${placeholderUrl('Intérieur+Kër+Mobilier', 1600, 900)}" alt="" class="h-full w-full object-cover" />
+        <img src="../../../assets/images/hero-boutique.jpg" alt="" class="h-full w-full object-cover" />
         <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
       </div>
       <div class="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
