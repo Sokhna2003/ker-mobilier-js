@@ -25,17 +25,17 @@ export function renderLoginPage() {
                   <div id="globalLoginError" class="hidden bg-rose-50 text-rose-600 text-xs font-bold p-3 rounded-xl border border-red-100 text-center"></div>
 
                   <div>
-                    <input type="email" id="loginEmail" placeholder="Adresse e-mail" 
+                    <input type="email" id="loginEmail" placeholder="Adresse e-mail"
                         class="w-full bg-slate-50 text-gray-800 rounded-2xl px-4 py-3.5 text-sm border-0 focus:outline-none focus:ring-4 focus:ring-amber-50 font-medium" />
                   </div>
 
                   <div>
-                    <input type="password" id="loginPassword" placeholder="Mot de passe" 
+                    <input type="password" id="loginPassword" placeholder="Mot de passe"
                         class="w-full bg-slate-50 text-gray-800 rounded-2xl px-4 py-3.5 text-sm border-0 focus:outline-none focus:ring-4 focus:ring-amber-50 font-medium" />
                   </div>
 
                   <div class="pt-2">
-                      <button type="submit" class="w-full sm:w-48 bg-amber-700 hover:bg-emerald-700 text-white text-xs font-black py-4 rounded-full tracking-widest uppercase shadow-lg transition duration-200 cursor-pointer">
+                      <button type="submit" class="w-full sm:w-48 bg-amber-700 hover:bg-[#0B132B] text-white text-xs font-black py-4 rounded-full tracking-widest uppercase shadow-lg transition duration-200 cursor-pointer">
                           Se connecter
                       </button>
                   </div>
