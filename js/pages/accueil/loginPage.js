@@ -69,12 +69,15 @@ export function renderLoginPage() {
       errorBox.classList.add("hidden");
     }
 
+    // 1. Champs obligatoires : message rouge sous le champ concerné, on s'arrête là
     const estValide = validerFormulaire([
       { id: "loginEmail", verifications: [() => required(email, "L'adresse e-mail est obligatoire.")] },
       { id: "loginPassword", verifications: [() => required(password, "Le mot de passe est obligatoire.")] }
     ]);
     if (!estValide) return;
 
+    // 2. Seulement si les deux champs sont remplis : on tente la connexion,
+    // et "email ou mot de passe incorrect" ne peut apparaître qu'ici.
     try {
       await loginUser(email, password);
 
